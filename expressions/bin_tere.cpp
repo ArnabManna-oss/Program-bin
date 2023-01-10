@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-int count=0,max=0,min=0;
+int count=0,max=0,min=0,k=0;
 typedef struct node
 {
 	int info;
@@ -114,6 +114,32 @@ void min_max(bin_tere *root)
 	min_max(root->lc);
 	min_max(root->rc);
 }
+int maxDepth(bin_tere *root)
+{
+    if (root == NULL)
+        return 0;
+    else {
+        /* compute the depth of each subtree */
+        int lDepth = maxDepth(root->lc);
+        int rDepth = maxDepth(root->rc);
+ 
+        /* use the larger one */
+        if (lDepth > rDepth)
+            return (lDepth + 1);
+        else
+            return (rDepth + 1);
+    }
+}
+//
+//void height(bin_tere *root)
+//{
+//	if(root==NULL)
+//		return;
+//	//printf("%d ",root->info);
+//	 k++;
+//	 height(root->lc);
+//	 height(root->rc);
+//}
 
 int main()
 {
@@ -128,7 +154,7 @@ int main()
 	while(1)
 	{
 		printf("\n**MENU**");
-		printf("\n1. Preorder\n2. Inorder\n3. Postorder\n4. no of leafs \n5. search\n6. max min\n7. exit");
+		printf("\n1. Preorder\n2. Inorder\n3. Postorder\n4. no of leafs \n5. search\n6. max min\n7. height \n8.exit");
 		printf("\nenter your choice: ");
 		scanf("%d",&ch);
 		switch(ch)
@@ -162,7 +188,10 @@ int main()
 				min_max(root);
 				printf("max =%d  min =%d",max,min);
 				break;
-			case 7: exit(0);
+			case 7: 
+				 
+				printf("the height is =%d",maxDepth(root));
+			case 8: exit(0);
 		}
 	}
 }
