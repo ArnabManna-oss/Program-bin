@@ -1,23 +1,25 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-int count=0,max=0,min=0,k=0;
+int count=0,max=0,min=0,len=0;
+int pre[100],post[100],in[100],ic=0,pc=0,poc=0;
 typedef struct node
 {
 	int info;
 	struct node *lc,*rc;
-}bin_tere;
+}bst;
 
-void create(bin_tere *root)
-{
+void create(bst *root)
+{	
+	len++;
 	char ans;
-	bin_tere *ptr;
+	bst *ptr;
 	printf("\nDo you want to create the left child of %d? ",root->info);
 	fflush(stdin);
 	scanf("%c",&ans);
 	if(ans=='Y' || ans=='y')
 	{
-		ptr=(bin_tere*)malloc(sizeof(bin_tere));
+		ptr=(bst*)malloc(sizeof(bst));
 		printf("\nenter the information for the left child: ");
 		scanf("%d",&ptr->info);
 		ptr->lc=ptr->rc=NULL;
@@ -31,7 +33,7 @@ void create(bin_tere *root)
 	scanf("%c",&ans);
 	if(ans=='Y' || ans=='y')
 	{
-		ptr=(bin_tere*)malloc(sizeof(bin_tere));
+		ptr=(bst*)malloc(sizeof(bst));
 		printf("\nenter the information for the right child: ");
 		scanf("%d",&ptr->info);
 		ptr->lc=ptr->rc=NULL;
@@ -42,7 +44,7 @@ void create(bin_tere *root)
 		root->rc=NULL;
 }
 
-void preorder(bin_tere *root)
+void preorder(bst *root)
 {
 	if(root==NULL)
 		return;
@@ -51,7 +53,7 @@ void preorder(bin_tere *root)
 	preorder(root->rc);
 }
 
-void inorder(bin_tere *root)
+void inorder(bst *root)
 {
 	if(root==NULL)
 		return;
@@ -60,7 +62,7 @@ void inorder(bin_tere *root)
 	inorder(root->rc);
 }
 
-void postorder(bin_tere *root)
+void postorder(bst *root)
 {
 	if(root==NULL)
 		return;
@@ -69,7 +71,7 @@ void postorder(bin_tere *root)
 	printf("%d ",root->info);
 }
 
-void cntleaf(bin_tere *root)
+void cntleaf(bst *root)
 {
 	
 	if(root==NULL)
@@ -84,7 +86,7 @@ void cntleaf(bin_tere *root)
 	cntleaf(root->rc);
 	 
 }
-void Search(bin_tere *root,int n)
+void Search(bst *root,int n)
 {
 	
 	if(root==NULL)
@@ -98,7 +100,7 @@ void Search(bin_tere *root,int n)
 	Search(root->rc,n);
 }
 
-void min_max(bin_tere *root)
+void min_max(bst *root)
 {
 	
 	if(root==NULL)
@@ -114,39 +116,44 @@ void min_max(bin_tere *root)
 	min_max(root->lc);
 	min_max(root->rc);
 }
-int maxDepth(bin_tere *root)
+
+void inSuc(bst *root)
 {
-    if (root == NULL)
-        return 0;
-    else {
-        /* compute the depth of each subtree */
-        int lDepth = maxDepth(root->lc);
-        int rDepth = maxDepth(root->rc);
- 
-        /* use the larger one */
-        if (lDepth > rDepth)
-            return (lDepth + 1);
-        else
-            return (rDepth + 1);
-    }
+	if(root==NULL)
+		return;
+	inSuc(root->lc);
+	//printf("%d ",root->info);
+	in[ic++]=root->info;
+	inSuc(root->rc);
 }
-//
-//void height(bin_tere *root)
-//{
-//	if(root==NULL)
-//		return;
-//	//printf("%d ",root->info);
-//	 k++;
-//	 height(root->lc);
-//	 height(root->rc);
-//}
+
+void posSuc(bst *root)
+{
+	if(root==NULL)
+		return;
+	posSuc(root->lc);
+	posSuc(root->rc);
+	//printf("%d ",root->info);
+	post[poc++]=root->info;
+}
+
+void preSuc(bst *root)
+{
+	if(root==NULL)
+		return;
+	//printf("%d ",root->info);
+	pre[pc++]=root->info;
+	preSuc(root->lc);
+	preSuc(root->rc);
+}
+
 
 int main()
 {
-	bin_tere *root=NULL,*ptr;
-	int ch,n;
+	bst *root=NULL,*ptr;
+	int ch,n,i,j=0,len=0;
 	printf("\nenter the information for the root: ");
-	ptr=(bin_tere*)malloc(sizeof(bin_tere));
+	ptr=(bst*)malloc(sizeof(bst));
 	scanf("%d",&ptr->info);
 	ptr->lc=ptr->rc=NULL;
 	root=ptr;
@@ -154,7 +161,7 @@ int main()
 	while(1)
 	{
 		printf("\n**MENU**");
-		printf("\n1. Preorder\n2. Inorder\n3. Postorder\n4. no of leafs \n5. search\n6. max min\n7. height \n8.exit");
+		printf("\n1. Preorder\n2. Inorder\n3. Postorder\n4. no of leafs \n5. search\n6. max min\n7. inorder Successor \n8. postorder Successor \n9. preorder successor \n10. exit");
 		printf("\nenter your choice: ");
 		scanf("%d",&ch);
 		switch(ch)
@@ -188,10 +195,80 @@ int main()
 				min_max(root);
 				printf("max =%d  min =%d",max,min);
 				break;
-			case 7: 
-				 
-				printf("the height is =%d",maxDepth(root));
-			case 8: exit(0);
+			case 7:
+				printf("enter the value :");
+				scanf("%d",&n);
+				 inSuc(root);
+				 j=0;
+				 len=ic;
+				 //printf("%d",len);
+				 for(i=0;i<len;i++)
+				 {
+				 	
+				 	if(in[i]==n)
+				 	{
+						j=1;
+						break;
+					}
+				 }
+				 if(j==1)
+				 {
+				 	printf("%d",i);
+				 	if(i==len-1)
+					 	printf("no Successor");
+				 	else
+					 	printf("the successor of %d is %d",n,in[i+1]);
+				 }
+				 else
+				 	printf("no successor");
+				 break;
+			case 8:
+				printf("enter the value :");
+				scanf("%d",&n);
+				 posSuc(root);
+				 j=0;
+				 len=poc;
+				 for(i=0;i<len;i++)
+				 {
+				 	if(post[i]==n)
+				 	{
+						j=1;
+						 break;
+					}
+				 }
+				 if(j==1){
+				 	if(i==len-1)
+				 	printf("no Successor");
+				 	else
+				 	printf("the successor of %d is %d",n,post[i+1]);
+				 }
+				 else
+				 printf("no node");
+				 break;
+			case 9:
+				printf("enter the value :");
+				scanf("%d",&n);
+				 preSuc(root);
+				 j=0;
+				 len=pc;
+				 for(i=0;i<len;i++)
+				 {
+				 	if(pre[i]==n)
+				 	{
+						j=1;
+						 break;
+					}
+				 }
+				 if(j==1){
+				 	if(i==len-1)
+				 	printf("no Successor");
+				 	else
+				 	printf("the successor of %d is %d",n,pre[i+1]);
+				 }
+				 else
+				 printf("no node");
+				 break;
+			case 10:exit(0);
 		}
 	}
 }
