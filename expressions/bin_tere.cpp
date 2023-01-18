@@ -147,6 +147,17 @@ void preSuc(bst *root)
 	preSuc(root->rc);
 }
 
+int height(bst *root)
+{
+	if(root==NULL)
+	return 0;
+	
+	int left_height = height(root->lc);
+    int right_height = height(root->rc);
+	
+	return (left_height>right_height?left_height:right_height)+1;
+	
+}
 
 int main()
 {
@@ -161,7 +172,7 @@ int main()
 	while(1)
 	{
 		printf("\n**MENU**");
-		printf("\n1. Preorder\n2. Inorder\n3. Postorder\n4. no of leafs \n5. search\n6. max min\n7. inorder Successor \n8. postorder Successor \n9. preorder successor \n10. exit");
+		printf("\n1. Preorder\n2. Inorder\n3. Postorder\n4. no of leafs \n5. search\n6. max min\n7. inorder Successor \n8. postorder Successor \n9. preorder successor \n10. inorder predicessor \n11. postorder predicessor \n12. preorder predicessor \n13. height of tree \n14. exit");
 		printf("\nenter your choice: ");
 		scanf("%d",&ch);
 		switch(ch)
@@ -268,7 +279,82 @@ int main()
 				 else
 				 printf("no node");
 				 break;
-			case 10:exit(0);
+			case 10:
+				 printf("enter the value :");
+				 scanf("%d",&n);
+				 inSuc(root);
+				 j=0;
+				 len=ic;
+				 //printf("%d",len);
+				 for(i=0;i<len;i++)
+				 {	
+				 	if(in[i]==n)
+				 	{
+						j=1;
+						break;
+					}
+				 }
+				 if(j==1)
+				 {
+				 	printf("%d",i);
+				 	if(i==0)
+					 	printf("no predicessor");
+				 	else
+					 	printf("the predicessor of %d is %d",n,in[i-1]);
+				 }
+				 else
+				 	printf("no successor");
+				 break;
+			case 11:
+				 printf("enter the value :");
+				 scanf("%d",&n);
+				 posSuc(root);
+				 j=0;
+				 len=poc;
+				 for(i=0;i<len;i++)
+				 {
+				 	if(post[i]==n)
+				 	{
+						j=1;
+						 break;
+					}
+				 }
+				 if(j==1){
+				 	if(i==0)
+				 	printf("no predicessor");
+				 	else
+				 	printf("the predicessor of %d is %d",n,post[i-1]);
+				 }
+				 else
+				 printf("no node");
+				 break;
+			case 12:
+				 printf("enter the value :");
+				 scanf("%d",&n);
+				 preSuc(root);
+				 j=0;
+				 len=pc;
+				 for(i=0;i<len;i++)
+				 {
+				 	if(pre[i]==n)
+				 	{
+						j=1;
+						 break;
+					}
+				 }
+				 if(j==1){
+				 	if(i==0)
+				 	printf("no predicessor");
+				 	else
+				 	printf("the predicessor of %d is %d",n,pre[i-1]);
+				 }
+				 else
+				 printf("no node");
+				 break;
+			case 13:
+				printf("height of the tree is %d",height(root));
+			case 14:
+			exit(0);
 		}
 	}
 }
